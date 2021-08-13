@@ -9,23 +9,27 @@ import java.util.List;
 
 public class LockedMeFileManager {
 	
-	
-	public static boolean listFileNames(String dirPath) {
+	/**
+	 * Method to list files in a directory
+	 * @param dirPath
+	 */
+	public static void listFileNames(String dirPath) {
+		//Method to list files in a given directory
 		
 		File fileObj=new File(dirPath);
 		
 		try {
-			if (fileObj.exists()) {
 				File[] filesList=fileObj.listFiles();
 				
 				if (filesList.length >0) {
 					List <String> arrFileNames=new ArrayList<String>();
-					
+//					Iterate through all files in the directory and save files in arraylist
 					for (File file: filesList) {
 						if (file.isFile()) {
 							arrFileNames.add(file.getName());
 						}
 					}
+//					To sort file names in ascending order
 					Collections.sort(arrFileNames);
 					
 					System.out.println("Files in "+dirPath +": ");
@@ -39,54 +43,62 @@ public class LockedMeFileManager {
 				}
 		
 			}
-			else {
-					System.out.println("The Directory path "+dirPath +" doesnot exists.");
-				}
-			}
 		catch (Exception e) {
 			System.out.println("Error occurred.Please contact Helpdesk.");
 		}
-		return true;
 	}
+	/**
+	 * Function to add file to a directory
+	 * @param dirPath
+	 * @param fileName
+	 * @param contentArr
+	 * @throws IOException 
+	 */
 	
-	
-	public static boolean addFilestoDir(String dirPath,String fileName, List <String> contentArr)	{
+	public static void addFiletoDir(String dirPath,String fileName, List <String> contentArr) throws IOException	{
 		
 		File fileObj=new File(dirPath,fileName);
-//		if (fileObj.exists()) {
+		FileWriter fw=null;
 			try {
-				FileWriter fw=new FileWriter(fileObj);
+				 fw =new FileWriter(fileObj);
+//				 Write lines to file
 				for (String line: contentArr) {
 					fw.append(line+"\n");
 				}
 				fw.close();
-				
+				System.out.println("File created in "+dirPath);
+
+
 			} catch (IOException e) {
+				fw.close();
 				System.out.println("Error occurred.Please contact Helpdesk.");
 				e.printStackTrace();
+
 			}
 			
-//		}
-//		else {
-//			System.out.println("The file path "+dirPath +" doesnot exists.");
-//
-//		}
 		
-		return true;	
 	}
-	public static boolean deleteFile (String dirPath,String fileName)	{
+	/**
+	 * Function to delete a file, case sensitive
+	 * @param dirPath
+	 * @param fileName
+	 */
+	public static void deleteFile (String dirPath,String fileName)	{
 		 
 		File fileObj=new File(dirPath);
-		boolean fileDeleted=false,fileExists=false;
-		if (fileObj.exists()) {
+		boolean fileDeleted=false;
+		boolean fileExists=false;
 			File[] filesList=fileObj.listFiles();
 			
 			if (filesList.length >0) {
 				
 				for (File file: filesList) {
+//					Iterate through files and check filename and delete if it matches
 					if (file.isFile() && file.getName().equals(fileName)) {
 						fileExists=true;
-						if(fileObj.delete()) {
+						File fileDelObj=new File(dirPath,fileName);
+//						Deletes file
+						if(fileDelObj.delete()) {
 							System.out.println("File "+fileName +" deleted.");	
 							fileDeleted=true;
 							break;
@@ -96,29 +108,30 @@ public class LockedMeFileManager {
 				}	
 			}
 			if (!fileExists) {
-				System.out.println("File not Exists. Please check the file name case also!");
+				System.out.println("File not Exists. Please check the file name (case also!!)");
 			}				
 			else if(!fileDeleted) {
 				System.out.println("File not deleted");
 			}
-		}
-		else {
-			System.out.println("Directory not exists.");
-		}
+		
 			
-				return true;	
 	}
-	public static boolean SearchFile (String dirPath,String fileName) {
+	/**
+	 * Function to search a file in given directory
+	 * @param dirPath
+	 * @param fileName
+	 */
+	public static void SearchFile (String dirPath,String fileName) {
 		
 		File fileObj=new File(dirPath);
-		if (fileObj.exists()) {
 			File[] filesList=fileObj.listFiles();
 			boolean fileExists=false;
 			if (filesList.length >0) {
-				
+//				Iterate through files in the directory and if matches with the given filename
+//				then prints the message
 				for (File file: filesList) {
 					if (file.isFile() && file.getName().equals(fileName)) {
-
+						fileExists=true;
 							System.out.println("File "+fileName +" exists.");	
 							break;
 						}
@@ -128,12 +141,7 @@ public class LockedMeFileManager {
 			if (!fileExists) {
 				System.out.println("File "+fileName +" not exists in the directory "+dirPath);	
 			}
-		}
-		else {
-			System.out.println("Directory "+dirPath +" not exists.");	
-
-		}
-		return true;	
+		
 	}
 	
 }
